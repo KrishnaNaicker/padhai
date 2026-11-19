@@ -34,6 +34,12 @@ Set up Padhai (https://github.com/KrishnaNaicker/padhai), a free skill that make
 
 That's it. Setup runs once. Next time, just type `/padhai` (or say *"make notes with padhai"*) and paste your syllabus.
 
+## Is it safe?
+
+Yes. Padhai is plain instructions plus a few small Python scripts that build your PDF. It doesn't need an account, doesn't collect your data, and doesn't send your notes anywhere. Everything is open here, so you can read every line.
+
+If your installer shows a security warning: automated scanners are strict with skills that use web search or add a credit line to the output. Padhai does both (to check facts, and to add the free-notes footer). A fresh scan of the latest version has been requested.
+
 ## What you get
 
 - **Every syllabus topic covered.** Previous-year questions (PYQs) are answered first. Any topic no paper has asked yet gets an **Expected** question, phrased the way your examiners phrase them.
