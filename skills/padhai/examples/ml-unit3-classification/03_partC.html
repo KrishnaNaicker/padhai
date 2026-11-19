@@ -1,0 +1,97 @@
+<div class="part" data-title="Multiclass Classification" data-sub="One-vs-All · One-vs-One · Multiclass confusion matrix · Per-class precision and recall"></div>
+
+<!-- ================= Q7 ================= -->
+<div class="q" data-marks="6" data-asked="Nov-Dec 2023">
+<div class="qt">Explain construction of a multi-classifier using One-vs-All and One-vs-One.</div>
+<div class="ans">
+
+<h4>Introduction</h4>
+<p>Algorithms such as <b>logistic regression, perceptron and SVM</b> are naturally <b>binary</b>. To solve a <b>K-class</b> problem with them, we break it into several binary problems and combine the answers. The two standard strategies are <b>One-vs-All (OvA)</b> and <b>One-vs-One (OvO)</b>.</p>
+<figure><img src="fig/ovaovo.svg" style="width:94%"><figcaption>Fig. 3.5 · (a) OvA trains one classifier per class; (b) OvO trains one per pair of classes</figcaption></figure>
+
+<h4>1. One-vs-All (One-vs-Rest, OvR)</h4>
+<ol class="steps">
+  <li>For each class $k=1,\dots,K$, create a binary dataset: samples of class k are labelled <b>positive</b>, all other samples are labelled <b>negative</b>.</li>
+  <li>Train one binary classifier $f_k(x)$ on each dataset, giving <b>K classifiers</b> in total.</li>
+  <li>To predict, run all K classifiers on the new point x and get a score or probability from each.</li>
+  <li>Assign the class whose classifier is most confident: $\hat y=\arg\max_k f_k(x)$.</li>
+</ol>
+<p><b>Example (classes A, B, C):</b> classifiers A-vs-{B,C}, B-vs-{A,C}, C-vs-{A,B} give scores 0.2, 0.7, 0.4 for a new point, so it is classified as <b>B</b>.</p>
+
+<h4>2. One-vs-One (OvO, All-vs-All)</h4>
+<ol class="steps">
+  <li>For every <b>pair</b> of classes (i, j), take only the samples of those two classes.</li>
+  <li>Train a binary classifier $f_{ij}(x)$ that separates class i from class j, giving $\frac{K(K-1)}{2}$ classifiers.</li>
+  <li>To predict, run every pairwise classifier on x; each one casts a <b>vote</b> for one of its two classes.</li>
+  <li>Assign the class with the <b>most votes</b> (ties are broken by the summed confidence).</li>
+</ol>
+<p><b>Example:</b> A|B votes B, A|C votes A, B|C votes B. Votes: A = 1, B = 2, C = 0, so the prediction is <b>B</b>.</p>
+
+<h4>Number of Classifiers</h4>
+<table class="t num">
+<tr><th>Number of classes K</th><th>OvA (K)</th><th>OvO (K(K−1)/2)</th></tr>
+<tr><td>3</td><td>3</td><td>3</td></tr>
+<tr><td>4</td><td>4</td><td>6</td></tr>
+<tr><td>10 (digits)</td><td>10</td><td>45</td></tr>
+</table>
+
+<h4>Comparison of OvA and OvO</h4>
+<table class="t">
+<tr><th style="width:22%">Basis</th><th style="width:39%">One-vs-All</th><th>One-vs-One</th></tr>
+<tr><td>Classifiers</td><td>K</td><td>K(K − 1) / 2</td></tr>
+<tr><td>Training data per model</td><td>Whole dataset</td><td>Only the two classes involved (smaller)</td></tr>
+<tr><td>Decision rule</td><td>Highest score (argmax)</td><td>Majority voting</td></tr>
+<tr><td>Class imbalance</td><td>Each model is imbalanced (1 class vs K − 1 classes)</td><td>Each pair is roughly balanced</td></tr>
+<tr><td>Cost</td><td>Fewer models; suits large K</td><td>Many models, but each trains fast; suits algorithms that scale badly with n (kernel SVM)</td></tr>
+<tr><td>Ambiguity</td><td>Scores from different models may not be comparable</td><td>Tied votes are possible</td></tr>
+<tr><td>Used by</td><td>Logistic regression, LinearSVC (default)</td><td>SVC with kernels in scikit-learn</td></tr>
+</table>
+<div class="hook"><b>OvA = "me vs everyone" (K models). OvO = "every pair fights once" (K(K−1)/2 models, vote).</b></div>
+<div class="concl">OvA builds K classifiers and picks the most confident one; OvO builds a classifier for each pair and picks the class with most votes. OvA is cheaper in number of models, while OvO gives smaller, balanced sub-problems.</div>
+</div></div>
+
+<!-- ================= Q8 ================= -->
+<div class="q" data-marks="4" data-asked="Nov-Dec 2024">
+<div class="qt">Explain any 4 evaluation measures of multiclass classification.</div>
+<div class="ans">
+
+<h4>Multiclass Confusion Matrix</h4>
+<p>For K classes the confusion matrix is <b>K × K</b>: rows are actual classes, columns are predicted classes. The <b>diagonal</b> holds correct predictions. For any class k:</p>
+<ul>
+  <li>$TP_k$ = diagonal cell (k, k).</li>
+  <li>$FP_k$ = column k total − $TP_k$ (others wrongly predicted as k).</li>
+  <li>$FN_k$ = row k total − $TP_k$ (class k wrongly predicted as something else).</li>
+</ul>
+<div class="two">
+<div><figure><img src="fig/cm3.svg" style="width:96%"><figcaption>Fig. 3.6 · 3-class confusion matrix (100 samples)</figcaption></figure></div>
+<div>
+<table class="t num">
+<tr><th>Class</th><th>TP</th><th>FP</th><th>FN</th></tr>
+<tr><td>Cat</td><td>40</td><td>4 + 2 = 6</td><td>5 + 5 = 10</td></tr>
+<tr><td>Dog</td><td>30</td><td>5 + 3 = 8</td><td>4 + 6 = 10</td></tr>
+<tr><td>Rabbit</td><td>5</td><td>5 + 6 = 11</td><td>2 + 3 = 5</td></tr>
+</table>
+<p class="sm">Actual totals: Cat 50, Dog 40, Rabbit 10. Predicted totals: 46, 38, 16.</p>
+</div></div>
+
+<h4>1. Overall Accuracy</h4>
+<div class="formula">$$\text{Accuracy}=\frac{\sum_k TP_k}{N}=\frac{40+30+5}{100}=0.75$$</div>
+
+<h4>2. Per-Class Precision</h4>
+<div class="formula">$$P_k=\frac{TP_k}{TP_k+FP_k}\qquad P_{Cat}=\tfrac{40}{46}=0.870,\;P_{Dog}=\tfrac{30}{38}=0.789,\;P_{Rabbit}=\tfrac{5}{16}=0.313$$</div>
+
+<h4>3. Per-Class Recall</h4>
+<div class="formula">$$R_k=\frac{TP_k}{TP_k+FN_k}\qquad R_{Cat}=\tfrac{40}{50}=0.80,\;R_{Dog}=\tfrac{30}{40}=0.75,\;R_{Rabbit}=\tfrac{5}{10}=0.50$$</div>
+
+<h4>4. Per-Class F1 and Averaged Scores</h4>
+<p>Per-class F1: Cat 0.833, Dog 0.769, Rabbit 0.385. The per-class values are combined in three ways:</p>
+<table class="t">
+<tr><th style="width:18%">Average</th><th style="width:44%">How it is computed</th><th>Value here</th></tr>
+<tr><td><b>Macro</b></td><td>Simple mean over classes; every class counts equally.</td><td>P = 0.657, R = 0.683, F1 = 0.662</td></tr>
+<tr><td><b>Micro</b></td><td>Pool all TP, FP, FN, then compute once. For single-label data it equals accuracy.</td><td>P = R = F1 = 0.75</td></tr>
+<tr><td><b>Weighted</b></td><td>Mean weighted by class size (support).</td><td>F1 = 0.763</td></tr>
+</table>
+<p><b>Reading the result:</b> accuracy (0.75) looks fine, but the per-class view shows that the small <b>Rabbit</b> class is poorly recognised (precision 0.31, recall 0.50). Macro-F1 (0.66) exposes this; micro-F1 (0.75) hides it.</p>
+<div class="tip">For a 4-mark answer write: confusion matrix, per-class precision, per-class recall, and macro / micro F1, each with its formula. Use macro-averaging when every class matters equally, especially with imbalance.</div>
+<div class="concl">Multiclass evaluation uses a K × K confusion matrix, from which per-class precision, recall and F1 are found by treating each class as positive in turn; macro, micro and weighted averages summarise them into single numbers.</div>
+</div></div>

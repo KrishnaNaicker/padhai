@@ -1,0 +1,79 @@
+<!-- Padhai part template: every element in use. Copy, rename to 01_<name>.html, replace the content.
+     Full real unit: examples/ml-unit3-classification/. Markup reference: references/format.md -->
+
+<div class="part" data-title="CPU Scheduling Algorithms" data-sub="Criteria · FCFS · SJF · Gantt chart"></div>
+
+<!-- An Expected "differentiate" question -->
+<div class="q" data-marks="6">
+<div class="qt">Differentiate between preemptive and non-preemptive scheduling.</div>
+<div class="ans">
+
+<h4>Definitions</h4>
+<ul>
+  <li><b>Preemptive scheduling:</b> the OS can <b>take the CPU away</b> from a running process (on a higher-priority arrival or time-slice expiry).</li>
+  <li><b>Non-preemptive scheduling:</b> a process keeps the CPU <b>until it finishes or blocks</b> for I/O.</li>
+</ul>
+
+<h4>Difference</h4>
+<table class="t">
+<tr><th style="width:22%">Basis</th><th style="width:39%">Preemptive</th><th>Non-preemptive</th></tr>
+<tr><td>CPU release</td><td>Forced by the OS</td><td>Voluntary (finish or I/O)</td></tr>
+<tr><td>Response time</td><td>Low; good for interactive systems</td><td>Can be high</td></tr>
+<tr><td>Overhead</td><td>Context switches add overhead</td><td>Minimal</td></tr>
+<tr><td>Starvation</td><td>Possible for low-priority processes</td><td>Possible behind long jobs</td></tr>
+<tr><td>Examples</td><td>Round Robin, SRTF, preemptive priority</td><td>FCFS, SJF, non-preemptive priority</td></tr>
+</table>
+
+<div class="flow"><span class="n">New</span><span class="ar">→</span><span class="n">Ready</span><span class="ar">→</span><span class="n e">Running</span><span class="ar">→</span><span class="n">Terminated</span></div>
+<p class="loop">Running → Ready happens only in preemptive scheduling</p>
+
+<div class="hook"><b>Preemptive = the OS can interrupt; non-preemptive = the process decides when to leave.</b></div>
+<div class="concl">Preemptive scheduling gives better response time at the cost of context switches; non-preemptive scheduling is simpler but can make short jobs wait.</div>
+</div></div>
+
+<!-- A PYQ numerical (data-asked carries every date it was asked) -->
+<div class="q" data-marks="8" data-asked="May 2023, Dec 2024" data-index="Calculate average waiting and turnaround time using FCFS for the given processes.">
+<div class="qt">Consider processes P1–P4 with arrival times 0, 1, 2, 3 ms and burst times 5, 3, 8, 6 ms. Draw the Gantt chart for FCFS and calculate the average waiting time and average turnaround time.</div>
+<div class="ans">
+
+<h4>Given</h4>
+<table class="t num">
+<tr><th>Process</th><th>Arrival (ms)</th><th>Burst (ms)</th></tr>
+<tr><td>P1</td><td>0</td><td>5</td></tr><tr><td>P2</td><td>1</td><td>3</td></tr>
+<tr><td>P3</td><td>2</td><td>8</td></tr><tr><td>P4</td><td>3</td><td>6</td></tr>
+</table>
+
+<h4>Formulas</h4>
+<div class="formula"><span class="lbl">Turnaround and waiting time</span>
+$$TAT_i = CT_i - AT_i \qquad WT_i = TAT_i - BT_i$$
+<div class="where"><b>CT</b> = completion time, <b>AT</b> = arrival time, <b>BT</b> = burst time.</div></div>
+
+<h4>Gantt Chart</h4>
+<figure><img src="fig/gantt.svg" style="width:80%"><figcaption>Fig. 2.1 · FCFS Gantt chart</figcaption></figure>
+
+<h4>Calculation</h4>
+<ol class="steps">
+  <li><b>Schedule in arrival order:</b> P1 0–5, P2 5–8, P3 8–16, P4 16–22.</li>
+  <li><b>Turnaround:</b> P1 = 5 − 0 = 5, P2 = 8 − 1 = 7, P3 = 16 − 2 = 14, P4 = 22 − 3 = 19.</li>
+  <li><b>Waiting:</b> P1 = 0, P2 = 4, P3 = 6, P4 = 13.</li>
+</ol>
+<div class="formula"><span class="lbl">Result</span>
+$$\overline{WT}=\frac{0+4+6+13}{4}=5.75\text{ ms}\qquad \overline{TAT}=\frac{5+7+14+19}{4}=11.25\text{ ms}$$</div>
+
+<div class="tip">Always draw the Gantt chart with times marked under every boundary; it carries marks on its own.</div>
+<div class="concl">Under FCFS the average waiting time is 5.75 ms and the average turnaround time is 11.25 ms; the long burst of P3 makes P4 wait 13 ms (convoy effect).</div>
+</div></div>
+
+<!-- The last part of every unit -->
+<div class="part rev" data-title="Rapid Revision Sheet" data-sub="Read the night before the exam"></div>
+<div class="rev">
+<div class="two">
+<div><div class="box"><h5>Core formulas</h5><ul>
+<li>$TAT = CT - AT$ · $WT = TAT - BT$</li></ul></div></div>
+<div><div class="box"><h5>One-liners examiners love</h5><ul>
+<li>FCFS suffers from the convoy effect.</li></ul></div></div>
+</div>
+<div class="box"><h5>If they ask X → make sure you write Y</h5>
+<table class="t"><tr><th>Question says</th><th>Must include</th></tr>
+<tr><td>"Calculate average waiting time"</td><td>Given table → Gantt chart → formulas → per-process table → averages</td></tr></table></div>
+</div>

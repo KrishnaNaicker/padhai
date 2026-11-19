@@ -1,0 +1,11 @@
+{
+  "subject": "Operating Systems",
+  "unit": "Unit II: CPU Scheduling",
+  "doc_title": "Master Solution — Unit II: CPU Scheduling",
+  "details": [["Course", "B.Tech Computer Engineering"], ["University", ""], ["Semester", "IV"]],
+  "pyq_label": "PYQ",
+  "syllabus": [
+    ["CPU Scheduling", "Scheduling criteria, preemptive and non-preemptive scheduling, FCFS, SJF, Priority, Round Robin."]
+  ],
+  "output": "OS_Unit2_CPU_Scheduling"
+}

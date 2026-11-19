@@ -1,0 +1,43 @@
+{
+ "subject": "Machine Learning",
+ "unit": "Unit III: Classification",
+ "doc_title": "Master Solution — Unit III: Classification",
+ "details": [
+  [
+   "Branch",
+   "Artificial Intelligence and Data Science"
+  ],
+  [
+   "University",
+   "SPPU"
+  ],
+  [
+   "Pattern",
+   "2019"
+  ],
+  [
+   "Semester",
+   "VII"
+  ]
+ ],
+ "pyq_label": "SPPU",
+ "output": "ML_Unit3_Classification",
+ "syllabus": [
+  [
+   "Introduction",
+   "Need of Classification, Types of Classification (Binary and Multiclass), Binary-vs-Multiclass Classification, Balanced and Imbalanced Classification Problems."
+  ],
+  [
+   "Binary Classification",
+   "Linear Classification model, Performance Evaluation: Confusion Matrix, Accuracy, Precision, Recall, F measures."
+  ],
+  [
+   "Multiclass Classification",
+   "One-vs-One and One-vs-All classification techniques, Performance Evaluation: Confusion Matrix, Per Class Precision, Per Class Recall."
+  ],
+  [
+   "Classification Algorithms",
+   "K Nearest Neighbor, Linear Support Vector Machines (SVM): Introduction, Soft Margin SVM, Kernel functions: Radial Basis Kernel, Gaussian, Polynomial, Sigmoid."
+  ]
+ ]
+}

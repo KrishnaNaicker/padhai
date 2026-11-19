@@ -1,0 +1,273 @@
+<div class="part" data-title="Classification Algorithms: KNN and SVM" data-sub="K-Nearest Neighbour · Linear SVM · Soft margin · Kernel functions"></div>
+
+<!-- ================= Q9 ================= -->
+<div class="q" data-marks="6–8" data-asked="Nov-Dec 2024 (8M), Nov-Dec 2025 (6M)">
+<div class="qt">Write a detailed note on K-Nearest Neighbour with example / Explain the KNN classification algorithm.</div>
+<div class="ans">
+
+<h4>Introduction</h4>
+<div class="def"><b>K-Nearest Neighbour (KNN)</b> is a <b>supervised, non-parametric, instance-based</b> algorithm. To classify a new point, it finds the <b>K training points closest</b> to it and assigns the class held by the <b>majority</b> of those K neighbours. It rests on one idea: <b>similar things lie close together</b>.</div>
+<ul>
+  <li><b>Lazy learner:</b> there is no training phase; it simply stores the data, and all the work happens at prediction time.</li>
+  <li><b>Non-parametric:</b> it makes no assumption about the shape of the data distribution.</li>
+  <li>It can do <b>classification</b> (majority vote) and <b>regression</b> (average of the K neighbours' values).</li>
+</ul>
+
+<h4>KNN Algorithm</h4>
+<ol class="steps">
+  <li><b>Choose K</b>, the number of neighbours (usually odd for two classes, to avoid ties).</li>
+  <li><b>Compute the distance</b> from the new point to every training point (usually Euclidean).</li>
+  <li><b>Sort</b> the distances in ascending order.</li>
+  <li><b>Select the K nearest</b> training points.</li>
+  <li><b>Count the classes</b> among these K neighbours.</li>
+  <li><b>Assign the majority class</b> to the new point (for regression, output the mean of their values).</li>
+</ol>
+
+<h4>Distance Measures</h4>
+<table class="t">
+<tr><th style="width:20%">Measure</th><th style="width:44%">Formula</th><th>Use</th></tr>
+<tr><td>Euclidean</td><td>$d=\sqrt{\sum_i (x_i-y_i)^2}$</td><td>Default for continuous features</td></tr>
+<tr><td>Manhattan</td><td>$d=\sum_i |x_i-y_i|$</td><td>Grid-like data; less sensitive to outliers</td></tr>
+<tr><td>Minkowski</td><td>$d=\left(\sum_i |x_i-y_i|^p\right)^{1/p}$</td><td>p = 1 Manhattan, p = 2 Euclidean</td></tr>
+<tr><td>Hamming</td><td>Number of positions that differ</td><td>Categorical / binary features</td></tr>
+</table>
+
+<h4>Example and the Effect of K</h4>
+<figure><img src="fig/knn.svg" style="width:56%"><figcaption>Fig. 3.7 · The same new point gets a different class for K = 3 and K = 7</figcaption></figure>
+<ul>
+  <li><b>K = 3</b> (solid circle): 2 Class B, 1 Class A, so the new point is <b>Class B</b>.</li>
+  <li><b>K = 7</b> (dashed circle): 4 Class A, 3 Class B, so the new point is <b>Class A</b>.</li>
+  <li>The choice of K changes the answer, which is why K must be chosen carefully.</li>
+</ul>
+
+<h4>Choosing K</h4>
+<table class="t">
+<tr><th style="width:22%">K value</th><th>Effect</th></tr>
+<tr><td>Small (K = 1)</td><td>Very flexible, noisy boundary; sensitive to outliers: <b>overfitting</b> (high variance).</td></tr>
+<tr><td>Large</td><td>Smooth boundary, but may ignore local patterns: <b>underfitting</b> (high bias).</td></tr>
+<tr><td>Rule of thumb</td><td>$K\approx\sqrt{n}$, odd; best K is found by <b>cross-validation</b> (elbow of error vs K).</td></tr>
+</table>
+
+<h4>Important Practical Points</h4>
+<ul>
+  <li><b>Feature scaling is essential:</b> a feature measured in thousands (salary) would dominate one measured in units (age). Use min–max or z-score normalisation first.</li>
+  <li><b>Weighted KNN:</b> nearer neighbours get larger weight, e.g. $w=1/d^2$, so a very close neighbour counts more than a far one.</li>
+  <li><b>Curse of dimensionality:</b> in very high dimensions all points become almost equally far apart, so KNN degrades.</li>
+</ul>
+
+<h4>Advantages and Disadvantages</h4>
+<table class="t">
+<tr><th style="width:50%">Advantages</th><th>Disadvantages</th></tr>
+<tr><td>Simple to understand and implement</td><td>Slow prediction: O(n·d) distance computations per query</td></tr>
+<tr><td>No training time; new data can be added at once</td><td>Needs to store the whole training set (memory heavy)</td></tr>
+<tr><td>Naturally handles multiclass problems</td><td>Sensitive to irrelevant features, scaling and noise</td></tr>
+<tr><td>Non-linear boundaries without any model assumption</td><td>Choosing K and the distance metric is not automatic</td></tr>
+</table>
+<p><b>Applications:</b> recommendation systems (similar users), handwriting and image recognition, medical diagnosis from similar patients, credit scoring, and imputing missing values.</p>
+<div class="concl">KNN classifies a point by a majority vote of its K nearest training points. It is simple and needs no training, but prediction is slow, features must be scaled, and the result depends on the choice of K and the distance measure.</div>
+</div></div>
+
+<!-- ================= Q10 ================= -->
+<div class="q" data-marks="12" data-asked="Nov-Dec 2023" data-index="Apply KNN to predict the result for Physics = 6, Chemistry = 8 (K = 3, Euclidean distance).">
+<div class="qt">Apply K-Nearest Neighbour (KNN) on the following data and predict the student result for Physics = 6 marks, Chemistry = 8 marks. Take K = 3 and Euclidean distance.</div>
+<div class="ans">
+
+<h4>Given Data</h4>
+<table class="t num" style="width:62%;margin:0 auto">
+<tr><th>Student</th><th>Physics (marks)</th><th>Chemistry (marks)</th><th>Result</th></tr>
+<tr><td>S1</td><td>4</td><td>3</td><td>Fail</td></tr>
+<tr><td>S2</td><td>6</td><td>7</td><td>Pass</td></tr>
+<tr><td>S3</td><td>7</td><td>8</td><td>Pass</td></tr>
+<tr><td>S4</td><td>5</td><td>5</td><td>Fail</td></tr>
+<tr><td>S5</td><td>8</td><td>8</td><td>Pass</td></tr>
+</table>
+<p><b>Query point:</b> Q = (Physics, Chemistry) = <b>(6, 8)</b>; <b>K = 3</b>.</p>
+
+<h4>Step 1: Distance Formula</h4>
+<div class="formula"><span class="lbl">Euclidean distance between Q = (6, 8) and a student (P, C)</span>
+$$d=\sqrt{(6-P)^2+(8-C)^2}$$</div>
+
+<h4>Step 2: Compute the Distance to Every Student</h4>
+<table class="t num">
+<tr><th>Student</th><th>(P, C)</th><th>Calculation</th><th>Distance</th><th>Result</th></tr>
+<tr><td>S1</td><td>(4, 3)</td><td>$\sqrt{(6-4)^2+(8-3)^2}=\sqrt{4+25}=\sqrt{29}$</td><td>5.385</td><td>Fail</td></tr>
+<tr><td>S2</td><td>(6, 7)</td><td>$\sqrt{(6-6)^2+(8-7)^2}=\sqrt{0+1}=\sqrt{1}$</td><td>1.000</td><td>Pass</td></tr>
+<tr><td>S3</td><td>(7, 8)</td><td>$\sqrt{(6-7)^2+(8-8)^2}=\sqrt{1+0}=\sqrt{1}$</td><td>1.000</td><td>Pass</td></tr>
+<tr><td>S4</td><td>(5, 5)</td><td>$\sqrt{(6-5)^2+(8-5)^2}=\sqrt{1+9}=\sqrt{10}$</td><td>3.162</td><td>Fail</td></tr>
+<tr><td>S5</td><td>(8, 8)</td><td>$\sqrt{(6-8)^2+(8-8)^2}=\sqrt{4+0}=\sqrt{4}$</td><td>2.000</td><td>Pass</td></tr>
+</table>
+
+<h4>Step 3: Sort by Distance and Rank</h4>
+<table class="t num">
+<tr><th>Rank</th><th>Student</th><th>Distance</th><th>Result</th><th>In K = 3?</th></tr>
+<tr><td>1</td><td>S2 (6, 7)</td><td>1.000</td><td>Pass</td><td class="hl">Yes</td></tr>
+<tr><td>2</td><td>S3 (7, 8)</td><td>1.000</td><td>Pass</td><td class="hl">Yes</td></tr>
+<tr><td>3</td><td>S5 (8, 8)</td><td>2.000</td><td>Pass</td><td class="hl">Yes</td></tr>
+<tr><td>4</td><td>S4 (5, 5)</td><td>3.162</td><td>Fail</td><td>No</td></tr>
+<tr><td>5</td><td>S1 (4, 3)</td><td>5.385</td><td>Fail</td><td>No</td></tr>
+</table>
+<p>S2 and S3 are tied at distance 1; both are inside the top 3, so the tie does not affect the result.</p>
+
+<h4>Step 4: Majority Voting among the 3 Nearest Neighbours</h4>
+<ul>
+  <li>Neighbours: S2 (Pass), S3 (Pass), S5 (Pass).</li>
+  <li>Votes: <b>Pass = 3</b>, Fail = 0.</li>
+</ul>
+<figure><img src="fig/knnnum.svg" style="width:52%"><figcaption>Fig. 3.8 · The circle of radius 2 around (6, 8) holds the three nearest students, all Pass</figcaption></figure>
+
+<h4>Step 5: Prediction</h4>
+<div class="formula"><span class="lbl">Result</span>
+$$\text{Physics}=6,\ \text{Chemistry}=8\ \Longrightarrow\ \textbf{Result = PASS}$$</div>
+
+<h4>Check with Other K Values (shows understanding)</h4>
+<table class="t num">
+<tr><th>K</th><th>Neighbours</th><th>Votes</th><th>Prediction</th></tr>
+<tr><td>1</td><td>S2 (or S3, tied)</td><td>Pass 1</td><td>Pass</td></tr>
+<tr><td>3</td><td>S2, S3, S5</td><td>Pass 3, Fail 0</td><td>Pass</td></tr>
+<tr><td>5</td><td>All</td><td>Pass 3, Fail 2</td><td>Pass</td></tr>
+</table>
+<div class="tip">Write all five square-roots in the table, not just the final numbers; the step marks are for the working. Euclidean distance never needs the square root to rank points (ranking √29, 1, 1, √10, √4 is the same as 29, 1, 1, 10, 4), but write it anyway because the question names Euclidean distance.</div>
+<div class="concl">With K = 3 and Euclidean distance, the three nearest students (6, 7), (7, 8) and (8, 8) have all passed, so the student with Physics = 6 and Chemistry = 8 is predicted to <b>PASS</b>.</div>
+</div></div>
+
+<!-- ================= Q11 ================= -->
+<div class="q" data-marks="6" data-asked="Nov-Dec 2023">
+<div class="qt">Explain the Support Vector Machine (SVM) classification algorithm with a suitable example.</div>
+<div class="ans">
+
+<h4>Introduction</h4>
+<div class="def">A <b>Support Vector Machine (SVM)</b> is a supervised algorithm that finds the <b>optimal hyperplane</b> separating two classes, namely the one with the <b>maximum margin</b>: the widest possible gap between the hyperplane and the nearest points of each class.</div>
+<ul>
+  <li><b>Hyperplane:</b> the decision boundary $w\cdot x+b=0$.</li>
+  <li><b>Support vectors:</b> the training points lying exactly on the margin boundaries $w\cdot x+b=\pm1$. Only these points decide the hyperplane; removing any other point does not change it.</li>
+  <li><b>Margin:</b> the distance between the two boundary lines, equal to $\dfrac{2}{\lVert w\rVert}$.</li>
+</ul>
+
+<h4>Mathematical Formulation (Linear, Hard Margin)</h4>
+<div class="formula"><span class="lbl">Primal problem: maximise margin = minimise ‖w‖</span>
+$$\min_{w,b}\ \tfrac{1}{2}\lVert w\rVert^2\quad\text{subject to}\quad y_i\,(w\cdot x_i+b)\ \ge 1\ \ \text{for all } i$$
+<div class="where"><b>y<sub>i</sub> ∈ {+1, −1}</b> is the class label. The constraint makes every point lie on the correct side, at least at the margin.</div></div>
+<div class="formula"><span class="lbl">Solution (from the dual with Lagrange multipliers α<sub>i</sub> ≥ 0)</span>
+$$w=\sum_i \alpha_i y_i x_i,\qquad f(x)=\operatorname{sign}\Big(\sum_{i\in SV}\alpha_i y_i\,(x_i\cdot x)+b\Big)$$
+<div class="where">$\alpha_i\gt 0$ only for support vectors; for all other points $\alpha_i=0$. The data enters only through dot products $x_i\cdot x$, which is what makes the kernel trick (Q13) possible.</div></div>
+
+<h4>SVM Algorithm Steps</h4>
+<ol class="steps">
+  <li>Take labelled training data with labels +1 / −1 (scale the features).</li>
+  <li>Choose the kernel (linear for linearly separable data) and the parameter C (Q12).</li>
+  <li>Solve the optimisation problem to get α, and hence w and b.</li>
+  <li>Identify the support vectors (points with α &gt; 0).</li>
+  <li>Classify a new point by the sign of $w\cdot x+b$.</li>
+</ol>
+
+<h4>Worked Example</h4>
+<p>Class +1: (3, 1), (3, −1), (6, 1), (6, −1). Class −1: (1, 0), (0, 1), (0, −1), (−1, 0).</p>
+<figure><img src="fig/svm.svg" style="width:60%"><figcaption>Fig. 3.9 · Maximum-margin hyperplane x₁ = 2 with its three support vectors</figcaption></figure>
+<ol class="steps">
+  <li><b>Find the closest points of each class:</b> class −1 nearest is (1, 0); class +1 nearest are (3, 1) and (3, −1). These are the <b>support vectors</b>.</li>
+  <li><b>The best boundary lies midway</b> between x₁ = 1 and x₁ = 3, so it is vertical: $w=(w_1,0)$.</li>
+  <li><b>Apply the margin conditions</b> $w\cdot x+b=\pm1$ on the support vectors:<br>
+  for (3, 1): $3w_1+b=+1$; for (1, 0): $w_1+b=-1$. Subtracting gives $2w_1=2$, so $w_1=1$ and $b=-2$.</li>
+  <li><b>Hyperplane:</b> $x_1-2=0$, with $w=(1,0)$, $b=-2$.</li>
+  <li><b>Margin</b> $=2/\lVert w\rVert=2/1=$ <b>2</b>. (Solver check: α = 0.5 for (1, 0) and 0.25 each for (3, ±1); $\sum\alpha_iy_i=-0.5+0.25+0.25=0$ ✓, $w=-0.5(1,0)+0.25(3,1)+0.25(3,-1)=(1,0)$ ✓.)</li>
+  <li><b>Classify new points:</b> (4, 2): $4-2=2\gt 0\Rightarrow$ <b>+1</b>; (1.5, 0): $1.5-2=-0.5\lt 0\Rightarrow$ <b>−1</b>.</li>
+</ol>
+
+<h4>Advantages, Limitations and Applications</h4>
+<ul>
+  <li><b>Advantages:</b> maximum margin gives good generalisation; effective in high dimensions (text); memory-efficient (only support vectors are kept); kernels handle non-linear data.</li>
+  <li><b>Limitations:</b> slow on very large datasets; sensitive to the choice of kernel and C; no direct probability output; needs feature scaling.</li>
+  <li><b>Applications:</b> text and spam classification, face detection, handwriting recognition, bioinformatics (protein and gene classification).</li>
+</ul>
+<div class="concl">SVM chooses, among all separating hyperplanes, the one with the largest margin $2/\lVert w\rVert$; it is defined only by the support vectors. In the example the hyperplane is $x_1=2$ with margin 2.</div>
+</div></div>
+
+<!-- ================= Q12 ================= -->
+<div class="q" data-marks="6" data-asked="Nov-Dec 2025">
+<div class="qt">Explain soft margin SVM. How does it differ from hard margin SVM?</div>
+<div class="ans">
+
+<h4>Hard Margin SVM</h4>
+<p>A <b>hard margin SVM</b> requires <b>every</b> training point to be correctly classified and to lie outside the margin: $y_i(w\cdot x_i+b)\ge1$. It works only when the data is <b>perfectly linearly separable</b>. A single outlier or overlapping point either makes the problem impossible or forces a very narrow, badly placed margin.</p>
+
+<h4>Soft Margin SVM</h4>
+<div class="def">A <b>soft margin SVM</b> allows some points to <b>violate the margin or even be misclassified</b>, by introducing a <b>slack variable</b> $\xi_i\ge0$ for each point, and pays a penalty C for each violation. It trades a few training errors for a <b>wider, more robust margin</b>.</div>
+<div class="formula"><span class="lbl">Soft margin optimisation problem</span>
+$$\min_{w,b,\xi}\ \tfrac{1}{2}\lVert w\rVert^2+C\sum_{i=1}^{n}\xi_i\quad\text{s.t.}\quad y_i(w\cdot x_i+b)\ge 1-\xi_i,\ \ \xi_i\ge0$$
+<div class="where">$\tfrac12\lVert w\rVert^2$ widens the margin; $C\sum\xi_i$ penalises violations. Equivalent hinge-loss form: $\min \tfrac12\lVert w\rVert^2+C\sum\max\big(0,\,1-y_i(w\cdot x_i+b)\big)$.</div></div>
+<figure><img src="fig/soft.svg" style="width:94%"><figcaption>Fig. 3.10 · Hard margin allows no violation; soft margin allows points inside the margin or on the wrong side</figcaption></figure>
+
+<h4>Meaning of the Slack Variable ξ</h4>
+<table class="t">
+<tr><th style="width:18%">Value of ξᵢ</th><th style="width:42%">Position of the point</th><th>Example: ξ = max(0, 1 − y·f(x))</th></tr>
+<tr><td>ξ = 0</td><td>Correct side, on or outside the margin</td><td>y·f(x) = 1.8 → ξ = 0</td></tr>
+<tr><td>0 &lt; ξ ≤ 1</td><td>Correct side, but inside the margin</td><td>y·f(x) = 0.4 → ξ = 0.6</td></tr>
+<tr><td>ξ &gt; 1</td><td>Wrong side of the hyperplane (misclassified)</td><td>y·f(x) = −0.5 → ξ = 1.5</td></tr>
+</table>
+
+<h4>Role of the Regularisation Parameter C</h4>
+<ul>
+  <li><b>Large C:</b> violations are expensive, so the model tries hard to classify every point; narrow margin, low bias, <b>risk of overfitting</b>. As C → ∞ it becomes a hard margin SVM.</li>
+  <li><b>Small C:</b> violations are cheap; wide margin, more training errors, <b>better tolerance of noise</b>, risk of underfitting.</li>
+  <li>C is chosen by cross-validation. In the dual problem it appears as the box constraint $0\le\alpha_i\le C$.</li>
+</ul>
+
+<h4>Hard Margin vs Soft Margin</h4>
+<table class="t">
+<tr><th style="width:21%">Basis</th><th style="width:39%">Hard Margin SVM</th><th>Soft Margin SVM</th></tr>
+<tr><td>Data requirement</td><td>Must be perfectly linearly separable</td><td>Works with overlapping / noisy data</td></tr>
+<tr><td>Constraint</td><td>$y_i(w\cdot x_i+b)\ge1$</td><td>$y_i(w\cdot x_i+b)\ge1-\xi_i,\ \xi_i\ge0$</td></tr>
+<tr><td>Objective</td><td>$\min \tfrac12\lVert w\rVert^2$</td><td>$\min \tfrac12\lVert w\rVert^2+C\sum\xi_i$</td></tr>
+<tr><td>Misclassification</td><td>Not allowed</td><td>Allowed, with a penalty</td></tr>
+<tr><td>Slack variables</td><td>None</td><td>One ξᵢ per point</td></tr>
+<tr><td>Parameter C</td><td>Not used (equivalent to C = ∞)</td><td>Controls the margin vs error trade-off</td></tr>
+<tr><td>Outliers</td><td>Very sensitive; one outlier can ruin it</td><td>Robust</td></tr>
+<tr><td>Margin</td><td>Narrow</td><td>Wider</td></tr>
+<tr><td>Generalisation</td><td>Can overfit</td><td>Usually better on real data</td></tr>
+<tr><td>Dual constraint</td><td>$\alpha_i\ge0$</td><td>$0\le\alpha_i\le C$</td></tr>
+</table>
+<div class="hook"><b>Hard = "no one crosses the line". Soft = "a few may cross, but each crossing costs C·ξ".</b></div>
+<div class="concl">Soft margin SVM adds slack variables and a penalty C so that the margin can be violated, which makes it usable on real, noisy, overlapping data. Hard margin SVM is the special case C → ∞ that only works for perfectly separable data.</div>
+</div></div>
+
+<!-- ================= Q13 ================= -->
+<div class="q" data-marks="6" data-asked="Nov-Dec 2024, Nov-Dec 2025" data-index="What are kernel functions in SVM? Describe the RBF, Gaussian, Polynomial and Sigmoid kernels.">
+<div class="qt">What are kernel functions in SVM? Describe the Radial Basis, Gaussian, Polynomial and Sigmoid kernels.</div>
+<div class="ans">
+
+<h4>Need for Kernels</h4>
+<p>A linear SVM can only draw a straight hyperplane. Many datasets (XOR, concentric circles) are <b>not linearly separable</b> in the input space, but become separable after mapping them to a <b>higher-dimensional feature space</b> with a function φ(x).</p>
+<figure><img src="fig/ktrick.svg" style="width:92%"><figcaption>Fig. 3.11 · Points on a line become linearly separable after the mapping x → (x, x²)</figcaption></figure>
+
+<h4>Kernel Function and the Kernel Trick</h4>
+<div class="def">A <b>kernel function</b> computes the dot product of two points in the high-dimensional feature space <b>directly from the original inputs</b>, without ever computing φ(x):
+$$K(x,z)=\phi(x)\cdot\phi(z)$$
+Because the SVM solution uses the data only through dot products, replacing $x_i\cdot x$ with $K(x_i,x)$ gives a non-linear SVM at almost no extra cost. This is the <b>kernel trick</b>.</div>
+<p><b>Verification example:</b> for $x=(1,2)$, $z=(2,3)$ and $\phi(v)=(v_1^2,\sqrt2\,v_1v_2,v_2^2)$:</p>
+<div class="formula">$$\phi(x)\cdot\phi(z)=(1)(4)+(2\sqrt2)(6\sqrt2)+(4)(9)=4+24+36=64=(x\cdot z)^2=8^2$$</div>
+<p>The kernel $(x\cdot z)^2$ gives the 3-D dot product using only the 2-D inputs. A valid kernel must satisfy <b>Mercer's condition</b> (its kernel matrix must be symmetric positive semi-definite).</p>
+<div class="formula"><span class="lbl">Kernel SVM decision function</span>
+$$f(x)=\operatorname{sign}\Big(\sum_{i\in SV}\alpha_i\,y_i\,K(x_i,x)+b\Big)$$</div>
+
+<h4>Types of Kernels (worked with x = (1, 2), z = (2, 3): x·z = 8, ‖x − z‖² = 2)</h4>
+<table class="t">
+<tr><th style="width:15%">Kernel</th><th style="width:30%">Formula</th><th style="width:20%">Example value</th><th>Description / use</th></tr>
+<tr><td><b>Linear</b></td><td>$K=x\cdot z$</td><td>8</td><td>No mapping; for linearly separable or high-dimensional sparse data such as text.</td></tr>
+<tr><td><b>Polynomial</b></td><td>$K=(\gamma\,x\cdot z+r)^d$</td><td>γ = 1, r = 1, d = 2: (8 + 1)² = <b>81</b></td><td>Captures feature interactions up to degree d; curved boundaries; used in image processing. Large d can overfit.</td></tr>
+<tr><td><b>Radial Basis Function (RBF)</b></td><td>$K=\exp(-\gamma\lVert x-z\rVert^2)$</td><td>γ = 0.5: e<sup>−1</sup> = <b>0.368</b></td><td>Value depends only on the distance between points: 1 for identical points, falls towards 0 as they move apart. Maps to an infinite-dimensional space; the default, most widely used kernel.</td></tr>
+<tr><td><b>Gaussian</b></td><td>$K=\exp\!\left(-\dfrac{\lVert x-z\rVert^2}{2\sigma^2}\right)$</td><td>σ = 1: e<sup>−1</sup> = <b>0.368</b></td><td>The RBF kernel written with the width σ of a Gaussian bell; identical to RBF with $\gamma=1/(2\sigma^2)$. Small σ gives a wiggly boundary, large σ a smooth one.</td></tr>
+<tr><td><b>Sigmoid</b></td><td>$K=\tanh(\gamma\,x\cdot z+r)$</td><td>γ = 0.1, r = 0: tanh(0.8) = <b>0.664</b></td><td>Same activation as a neural-network neuron, so an SVM with it behaves like a two-layer perceptron. Not positive semi-definite for all γ, r, so less commonly used.</td></tr>
+</table>
+<figure><img src="fig/kcurves.svg" style="width:92%"><figcaption>Fig. 3.12 · (a) RBF similarity vs distance for different γ; (b) polynomial and sigmoid kernels vs the dot product</figcaption></figure>
+
+<h4>RBF vs Gaussian: a Point Examiners Like</h4>
+<p>"Radial basis" means any kernel that depends only on the distance ‖x − z‖. The Gaussian is the most common radial basis kernel, so in practice "RBF kernel" and "Gaussian kernel" refer to the same function written with γ or σ. Another radial kernel is the Laplacian, $\exp(-\lVert x-z\rVert/\sigma)$.</p>
+
+<h4>Choosing a Kernel and its Parameters</h4>
+<ul>
+  <li>Start with <b>linear</b> when there are many features; otherwise <b>RBF</b> is the safe default.</li>
+  <li><b>γ (RBF):</b> large γ means each point influences only a small region (complex boundary, overfitting); small γ gives a smooth boundary.</li>
+  <li>Tune <b>C and γ together</b> with grid search and cross-validation.</li>
+</ul>
+<div class="concl">A kernel computes a dot product in a higher-dimensional space directly from the inputs, letting a linear SVM draw non-linear boundaries. Polynomial kernels model feature interactions, RBF / Gaussian kernels measure similarity by distance and are the default, and the sigmoid kernel imitates a neural network.</div>
+</div></div>

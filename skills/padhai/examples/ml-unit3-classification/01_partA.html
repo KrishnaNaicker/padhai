@@ -1,0 +1,116 @@
+<div class="part" data-title="Introduction to Classification" data-sub="Need · Types · Binary vs Multiclass · Balanced vs Imbalanced"></div>
+
+<!-- ================= Q1 ================= -->
+<div class="q" data-marks="6">
+<div class="qt">What is classification? Explain the need and types of classification.</div>
+<div class="ans">
+
+<h4>Definition</h4>
+<div class="def"><b>Classification</b> is a <b>supervised learning</b> task in which a model learns, from <b>labelled training data</b>, a mapping $f: X \rightarrow Y$ from input features $X$ to a <b>discrete class label</b> $Y$. The trained model (the <b>classifier</b>) then assigns the correct category to new, unseen inputs.</div>
+<ul>
+  <li>The output is a <b>category</b> (spam / not spam, digit 0–9), unlike <b>regression</b>, whose output is a continuous number (price, temperature).</li>
+  <li>Training data has the form $\{(x_1,y_1),(x_2,y_2),\dots,(x_n,y_n)\}$, where each $y_i$ is one of the known classes.</li>
+  <li>Geometrically, the classifier learns a <b>decision boundary</b> that divides the feature space into regions, one region per class.</li>
+</ul>
+
+<h4>Need of Classification</h4>
+<ol class="steps">
+  <li><b>Automated decision making:</b> many real decisions are categorical (approve / reject a loan, benign / malignant tumour). A classifier makes them quickly and consistently.</li>
+  <li><b>Handling large volumes:</b> billions of e-mails, transactions and images cannot be labelled by hand; a classifier labels them at scale.</li>
+  <li><b>Prediction from past data:</b> it learns patterns from historical labelled examples and applies them to new cases (e.g. predict whether a customer will churn).</li>
+  <li><b>Risk detection:</b> fraud detection, intrusion detection and disease screening all depend on separating a rare "bad" class from the normal class.</li>
+  <li><b>Organisation of information:</b> sorting news into topics, tagging photos and routing support tickets.</li>
+  <li><b>Basis for higher systems:</b> face recognition, speech recognition and self-driving perception are all built from classification models.</li>
+</ol>
+
+<h4>Types of Classification</h4>
+<table class="t">
+<tr><th style="width:20%">Type</th><th style="width:44%">Meaning</th><th>Example</th></tr>
+<tr><td><b>Binary</b></td><td>Exactly two classes; each sample belongs to one of them (positive / negative).</td><td>Spam vs not spam; pass vs fail; disease vs healthy.</td></tr>
+<tr><td><b>Multiclass</b></td><td>More than two mutually exclusive classes; each sample gets exactly one label.</td><td>Digit recognition (0–9); classifying an animal as cat, dog or rabbit.</td></tr>
+<tr><td><b>Multi-label</b></td><td>Each sample can carry several labels at once.</td><td>A movie tagged both "action" and "comedy".</td></tr>
+<tr><td><b>Imbalanced</b></td><td>Any of the above where one class has far more samples than another (see Q3).</td><td>Fraud (0.1%) vs genuine transactions (99.9%).</td></tr>
+</table>
+<figure><img src="fig/types.svg" style="width:94%"><figcaption>Fig. 3.1 · Binary classification needs one boundary; multiclass needs several</figcaption></figure>
+
+<h4>Common Classification Algorithms</h4>
+<ul>
+  <li><b>Linear models:</b> logistic regression, perceptron, linear SVM.</li>
+  <li><b>Instance-based:</b> K-Nearest Neighbour (KNN).</li>
+  <li><b>Tree-based:</b> decision tree, random forest.</li>
+  <li><b>Probabilistic:</b> Naïve Bayes. <b>Kernel / neural:</b> kernel SVM, neural networks.</li>
+</ul>
+<div class="concl">Classification predicts a discrete label from labelled examples. It is needed wherever decisions are categorical and data is too large to label by hand. The main types are binary, multiclass and multi-label, and any of them may be balanced or imbalanced.</div>
+</div></div>
+
+<!-- ================= Q2 ================= -->
+<div class="q" data-marks="6" data-asked="Nov-Dec 2023">
+<div class="qt">Differentiate between binary and multiclass classification.</div>
+<div class="ans">
+
+<h4>Definitions</h4>
+<ul>
+  <li><b>Binary classification:</b> the target has <b>exactly two classes</b>, usually called positive (1) and negative (0). Example: a mail filter decides spam or not spam.</li>
+  <li><b>Multiclass classification:</b> the target has <b>three or more mutually exclusive classes</b>, and each sample belongs to exactly one. Example: recognising a handwritten digit as one of 0–9.</li>
+</ul>
+
+<h4>Difference</h4>
+<table class="t">
+<tr><th style="width:22%">Basis</th><th style="width:39%">Binary Classification</th><th>Multiclass Classification</th></tr>
+<tr><td>Number of classes</td><td>Exactly 2</td><td>3 or more (K &gt; 2)</td></tr>
+<tr><td>Output</td><td>0 / 1, Yes / No, +1 / −1</td><td>One label out of K, e.g. {cat, dog, rabbit}</td></tr>
+<tr><td>Decision boundary</td><td>A single boundary (one hyperplane for a linear model)</td><td>Several boundaries dividing the space into K regions</td></tr>
+<tr><td>Output function</td><td>Sigmoid: $P(y=1\mid x)=\frac{1}{1+e^{-z}}$</td><td>Softmax: $P(y=k\mid x)=\frac{e^{z_k}}{\sum_j e^{z_j}}$</td></tr>
+<tr><td>Loss function</td><td>Binary cross-entropy</td><td>Categorical cross-entropy</td></tr>
+<tr><td>Algorithms</td><td>Logistic regression, SVM, perceptron work directly</td><td>Native: KNN, decision tree, Naïve Bayes, softmax; binary models need OvA / OvO (Q7)</td></tr>
+<tr><td>Confusion matrix</td><td>2 × 2 (TP, FP, FN, TN)</td><td>K × K; TP, FP, FN computed per class</td></tr>
+<tr><td>Evaluation</td><td>Accuracy, precision, recall, F1, ROC-AUC</td><td>Accuracy, per-class precision / recall, macro / micro / weighted averages</td></tr>
+<tr><td>Complexity</td><td>Simpler and faster</td><td>More complex; more parameters and more confusable classes</td></tr>
+<tr><td>Examples</td><td>Spam detection, fraud detection, pass / fail</td><td>Digit recognition, news topic, species, sentiment (positive / neutral / negative)</td></tr>
+</table>
+<div class="tip">Draw Fig. 3.1 beside the table: one dashed line for binary, three lines meeting at a point for multiclass. A diagram in a "differentiate" answer is worth an extra mark.</div>
+<div class="concl">Binary classification separates two classes with one boundary; multiclass classification chooses among K classes and either uses a natively multiclass algorithm or combines several binary classifiers through One-vs-All or One-vs-One.</div>
+</div></div>
+
+<!-- ================= Q3 ================= -->
+<div class="q" data-marks="6" data-asked="Nov-Dec 2024, Nov-Dec 2025">
+<div class="qt">Differentiate between balanced and imbalanced classification.</div>
+<div class="ans">
+
+<h4>Definitions</h4>
+<ul>
+  <li><b>Balanced classification:</b> every class has <b>roughly the same number of samples</b>, e.g. 500 cats and 500 dogs. The model sees enough examples of each class.</li>
+  <li><b>Imbalanced classification:</b> one class (the <b>majority</b>) has <b>far more samples</b> than another (the <b>minority</b>), e.g. 990 genuine and 10 fraudulent transactions. The minority class is usually the one we care about most.</li>
+</ul>
+<figure><img src="fig/imb.svg" style="width:80%"><figcaption>Fig. 3.2 · Class distribution in a balanced and an imbalanced dataset</figcaption></figure>
+
+<h4>Difference</h4>
+<table class="t">
+<tr><th style="width:21%">Basis</th><th style="width:39%">Balanced</th><th>Imbalanced</th></tr>
+<tr><td>Class distribution</td><td>Classes approximately equal (≈ 50 : 50)</td><td>Highly unequal (90 : 10, 99 : 1 or worse)</td></tr>
+<tr><td>Learning behaviour</td><td>Model learns all classes fairly</td><td>Model is biased towards the majority class and may ignore the minority</td></tr>
+<tr><td>Accuracy</td><td>A reliable measure</td><td><b>Misleading</b>: always predicting the majority class gives high accuracy</td></tr>
+<tr><td>Suitable metrics</td><td>Accuracy, F1</td><td>Precision, recall, F1, ROC-AUC, PR-AUC, balanced accuracy</td></tr>
+<tr><td>Special handling</td><td>Not needed</td><td>Resampling, class weights, threshold tuning, anomaly detection</td></tr>
+<tr><td>Data splitting</td><td>Simple random split works</td><td>Stratified split needed so each fold keeps the minority class</td></tr>
+<tr><td>Examples</td><td>Cat vs dog images, handwritten digits</td><td>Fraud, rare disease, intrusion detection, defect detection, spam</td></tr>
+</table>
+
+<h4>Why Accuracy Fails on Imbalanced Data: Example</h4>
+<p>A fraud dataset has <b>990 genuine</b> and <b>10 fraud</b> transactions. A useless model that predicts "genuine" for everything gets</p>
+<div class="formula"><span class="lbl">Accuracy of the "always genuine" model</span>
+$$\text{Accuracy}=\frac{990}{1000}=99\%\qquad\text{Recall (fraud)}=\frac{0}{10}=0\%$$</div>
+<p>The 99% accuracy hides the fact that the model catches <b>no fraud at all</b>. This is why recall, precision and F1 must be used for imbalanced problems.</p>
+
+<h4>Techniques to Handle Imbalance</h4>
+<ol class="steps">
+  <li><b>Random undersampling:</b> remove some majority samples. Fast, but discards information.</li>
+  <li><b>Random oversampling:</b> duplicate minority samples. Keeps all data, but can overfit.</li>
+  <li><b>SMOTE (Synthetic Minority Over-sampling Technique):</b> creates new synthetic minority points by interpolating between a minority sample and one of its K nearest minority neighbours.</li>
+  <li><b>Class weights / cost-sensitive learning:</b> give a larger penalty to errors on the minority class (e.g. <code>class_weight='balanced'</code>).</li>
+  <li><b>Threshold moving:</b> lower the decision threshold (e.g. from 0.5 to 0.2) so more minority cases are flagged.</li>
+  <li><b>Ensembles and anomaly detection:</b> balanced random forest, or treat the minority as anomalies.</li>
+</ol>
+<div class="hook"><b>Balanced → accuracy is fine. Imbalanced → "accuracy lies", so use recall, F1 and resampling.</b></div>
+<div class="concl">In balanced problems each class is equally represented and accuracy is a fair measure. In imbalanced problems the model is pulled towards the majority class, accuracy becomes misleading, and resampling, class weights and minority-focused metrics are required.</div>
+</div></div>

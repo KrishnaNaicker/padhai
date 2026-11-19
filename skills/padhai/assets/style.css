@@ -1,0 +1,138 @@
+/* Padhai: black / grey / white exam-notes theme. Colour belongs only inside diagrams. */
+
+@page { size: A4; margin: 17mm 15mm 15mm 15mm;
+  @top-left { content: "{{SUBJECT}}"; font: 9pt "Liberation Serif", "Times New Roman", Times, serif; color:#000; vertical-align: bottom; padding-bottom: 3mm; border-bottom: 0.6pt solid #000; }
+  @top-center { content: "Page " counter(page); font: 9pt "Liberation Serif", "Times New Roman", Times, serif; color:#000; vertical-align: bottom; padding-bottom: 3mm; border-bottom: 0.6pt solid #000; }
+  @bottom-center { content: "Free notes · made with Padhai · github.com/KrishnaNaicker/padhai · If you paid for this, you were scammed."; font: italic 8pt "Liberation Serif", "Times New Roman", Times, serif; color:#444; vertical-align: top; padding-top: 2.5mm; }
+  @top-right { content: "{{UNIT}}"; font: 9pt "Liberation Serif", "Times New Roman", Times, serif; color:#000; vertical-align: bottom; padding-bottom: 3mm; border-bottom: 0.6pt solid #000; }
+}
+*{ box-sizing: border-box; }
+html{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body{ font-family: "Liberation Serif", "Times New Roman", Times, "Nimbus Roman", "DejaVu Serif", serif; font-size: 11.6pt; line-height: 1.5; color: #000; margin: 0; }
+p{ margin: 0 0 7px; text-align: justify; }
+b, strong{ font-weight: 700; color:#000; }
+i{ font-style: italic; }
+
+/* ---------- master header ---------- */
+table.mh{ width:100%; border-collapse: collapse; margin: 0 0 14px; font-size: 11.5pt; }
+table.mh th, table.mh td{ border: 0.9pt solid #000; padding: 4px 8px; text-align:center; }
+table.mh th{ background:#d9d9d9; font-weight:700; font-size: 12.5pt; letter-spacing:.01em; }
+table.mh td.syl{ text-align:left; padding: 0; }
+table.mh td.syl p{ margin:0; padding: 5px 8px; border-top: 0.9pt solid #000; text-align:left; line-height:1.4; }
+table.mh td.syl p:first-child{ border-top:none; }
+
+/* ---------- part bar ---------- */
+.partbar{ border: 0.9pt solid #000; background:#d9d9d9; text-align:center; padding: 5px 8px; margin: 18px 0 12px; break-after: avoid; break-inside: avoid; }
+.partbar b{ display:block; font-size: 12.5pt; }
+.partbar span{ display:block; font-size: 10pt; font-style: italic; }
+
+/* ---------- question box ---------- */
+table.qbox{ width:100%; border-collapse: collapse; margin: 14px 0 16px; table-layout: fixed; }
+table.qbox > thead > tr > td, table.qbox > tfoot > tr > td, table.qbox > tbody > tr > td{ border: 0.9pt solid #000; }
+table.qbox tr.cp td{ padding:0; height:0; font-size:0; line-height:0; }
+table.qbox td.qn{ width: 46px; background:#d9d9d9; font-weight:700; font-size: 12.5pt; text-align:center; vertical-align: middle; padding: 4px 0; }
+table.qbox td.qt{ background:#d9d9d9; padding: 5px 9px; font-weight:700; font-size: 12pt; line-height:1.35; vertical-align: middle; }
+table.qbox td.qt .mk, table.qbox td.qt .ak{ font-weight:400; }
+table.qbox tr.qrow{ break-inside: avoid; break-after: avoid; }
+table.qbox td.an{ font-weight:700; text-align:center; vertical-align: top; padding-top: 8px; }
+table.qbox td.ac{ padding: 8px 10px 8px 10px; vertical-align: top; }
+.ac > *:first-child{ margin-top: 0; }
+/* ---------- headings ---------- */
+h4{ font-size: 12pt; font-weight: 700; margin: 12px 0 4px; break-after: avoid; }
+h4::after, h5::after{ content: ":"; }
+h5{ font-size: 11.6pt; font-weight: 700; margin: 9px 0 3px; break-after: avoid; }
+
+/* ---------- lists ---------- */
+ul{ margin: 2px 0 8px; padding-left: 24px; }
+ul li{ margin: 3px 0; text-align: justify; padding-left: 4px; }
+ul li::marker{ content: "•  "; color:#000; }
+ul ul li::marker{ content: "–  "; }
+ol{ margin: 2px 0 8px; padding-left: 22px; }
+ol li{ margin: 3px 0; }
+.steps{ counter-reset: s; list-style: none; padding-left: 0; margin: 3px 0 8px; }
+.steps > li{ counter-increment: s; margin: 3px 0; text-align: justify; }
+.steps > li::before{ content: "Step " counter(s) ": "; font-weight: 700; }
+
+/* ---------- boxes ---------- */
+.def{ margin: 2px 0 8px; text-align: justify; }
+.formula{ border: 0.8pt solid #000; padding: 6px 12px; margin: 7px 0 9px; text-align: center; break-inside: avoid; }
+.formula .lbl{ display:block; text-align:left; font-weight:700; font-size: 10.5pt; margin-bottom: 2px; }
+.formula .where{ text-align: left; font-size: 10.5pt; margin-top: 3px; }
+.tip, .hook{ border: 0.8pt solid #000; background: #f2f2f2; padding: 6px 10px; margin: 9px 0; break-inside: avoid; text-align: justify; }
+.tip::before{ content: "Exam Tip: "; font-weight: 700; }
+.hook::before{ content: "Memory Hook: "; font-weight: 700; }
+.concl{ margin-top: 9px; text-align: justify; }
+.concl::before{ content: "Conclusion: "; font-weight: 700; }
+.sm{ font-size: 10.8pt; }
+.cap{ font-size: 10pt; text-align:center; font-style: italic; margin: 2px 0 8px; }
+.chk, .crs{ font-weight:700; color:#000; }
+
+/* ---------- tables ---------- */
+table.t{ width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 10.8pt; break-inside: avoid; }
+table.t th, table.t td{ border: 0.8pt solid #000; padding: 4px 7px; vertical-align: top; line-height: 1.35; text-align: left; }
+table.t th{ background: #d9d9d9; font-weight: 700; }
+table.t td.sr, table.t th.sr{ width: 6.5%; text-align: center; }
+table.t.cmp td:nth-child(2){ font-weight: 400; }
+table.t.num td, table.t.num th{ text-align: center; }
+table.t.mat td:first-child, table.t.mat th:first-child{ background:#d9d9d9; font-weight:700; }
+table.t td.hl{ background: #e6e6e6; font-weight: 700; }
+table.t td.bad{ font-weight: 700; }
+table.t td.c{ text-align:center; }
+table.t td.ip{ background:#efefef; font-weight:700; font-size: 10.2pt; text-align:left; }
+table.idx{ font-size: 10.5pt; break-inside: auto; }
+table.idx tr{ break-inside: avoid; }
+table.idx td, table.idx th{ padding: 2.5px 6px; vertical-align: middle; }
+table.note{ font-size: 10.5pt; }
+
+/* ---------- layout helpers ---------- */
+.two{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; break-inside: avoid; }
+.two > div{ min-width: 0; }
+.stack > div{ margin-bottom: 2px; }
+
+figure{ margin: 8px 0 6px; text-align: center; break-inside: avoid; }
+figure img{ max-width: 100%; }
+figcaption{ font-size: 10pt; font-style: italic; margin-top: 3px; }
+
+/* types tree */
+.tree{ text-align:center; margin: 8px 0 4px; break-inside: avoid; }
+.tree .root{ display:inline-block; border: 0.9pt solid #000; background:#d9d9d9; font-weight:700; padding: 3px 16px; }
+.tree .kids{ display:grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-top: 14px; position: relative; }
+.tree .kids::before{ content:""; position:absolute; top:-8px; left:12.5%; right:12.5%; border-top: 0.9pt solid #000; }
+.tree .kid{ border: 0.9pt solid #000; padding: 4px 6px; font-size: 10.3pt; position: relative; line-height:1.35; }
+.tree .kid::before{ content:""; position:absolute; top:-9px; left:50%; height:8px; border-left: 0.9pt solid #000; }
+.tree .kid b{ display:block; }
+.tree .kid i{ font-size: 9.8pt; }
+
+/* flowcharts */
+.flow{ display:flex; align-items:center; justify-content:center; gap: 3px; flex-wrap: nowrap; margin: 8px 0 2px; break-inside: avoid; font-size: 9.2pt; }
+.flow .n{ border: 0.9pt solid #000; padding: 3px 6px; text-align:center; line-height:1.25; white-space: nowrap; }
+.flow .n.d{ border-radius: 14px; }
+.flow .n.e{ background:#d9d9d9; font-weight:700; }
+.flow .ar{ font-weight: 700; }
+.loop{ text-align:center; font-size: 10pt; font-style: italic; }
+
+.katex{ font-size: 1.0em; }
+.katex-display{ margin: 3px 0 !important; }
+
+/* revision sheet */
+.rev{ font-size: 10.8pt; }
+.rev .box{ border: 0.8pt solid #000; padding: 6px 10px; margin-bottom: 9px; break-inside: avoid; }
+.rev .box h5{ margin-top: 0; }
+.rev p, .rev li{ text-align: left; }
+.tree .kids.c3{ grid-template-columns: repeat(3,1fr); }
+.tree .kids.c3::before{ left:16.67%; right:16.67%; }
+code{ font-family: "Liberation Mono", "DejaVu Sans Mono", monospace; font-size: 9.6pt; background:#f0f0f0; padding: 0 3px; border-radius: 2px; }
+table.t.long{ break-inside: auto; }
+table.t.long tr{ break-inside: avoid; }
+pre.code{ font-family: "Liberation Mono", "DejaVu Sans Mono", monospace; font-size: 9.2pt; line-height: 1.38; background:#f4f4f4; border: 0.8pt solid #000; border-left: 3pt solid #000; padding: 5px 9px; margin: 5px 0 8px; white-space: pre-wrap; break-inside: avoid; }
+pre.code .c{ color:#555; font-style: italic; }
+li:has(code), p:has(code){ text-align: left; }
+
+/* ---------- additions ---------- */
+table.t.long thead{ display: table-header-group; }
+
+/* ---------- first-page notice (always on) ---------- */
+table.notice{ width:100%; border-collapse: collapse; margin: 0 0 14px; font-size: 10.3pt; break-inside: avoid; }
+table.notice td{ border: 0.9pt solid #000; padding: 6px 10px; vertical-align: middle; text-align: left; line-height: 1.4; }
+table.notice td.qr{ width: 25mm; padding: 4px; text-align: center; }
+table.notice td.qr img{ width: 21mm; height: 21mm; display: block; margin: 0 auto; }

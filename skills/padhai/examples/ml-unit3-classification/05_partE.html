@@ -1,0 +1,110 @@
+<div class="part" data-title="Regression Questions Asked in this Unit's Slot" data-sub="SSE · MSE · RMSE · Bayesian Linear Regression (Nov-Dec 2025 Q1 / Q2)"></div>
+
+<!-- ================= Q14 ================= -->
+<div class="q" data-marks="6" data-asked="Nov-Dec 2025" data-index="Explain SSE and MSE for regression. Calculate MSE (100 examples; SE₁, SE₂, SE₃ = 13.33, 3.33, 4.00).">
+<div class="qt">Explain the evaluation measures SSE and MSE for regression. For a given data having 100 examples, if the squared errors SE₁, SE₂ and SE₃ are 13.33, 3.33 and 4.00 respectively, calculate the Mean Squared Error (MSE).</div>
+<div class="ans">
+
+<h4>Error (Residual)</h4>
+<p>For each example i, the <b>error</b> or <b>residual</b> is the difference between the actual value and the value predicted by the regression model:</p>
+<div class="formula">$$e_i=y_i-\hat y_i\qquad\text{Squared error: } SE_i=(y_i-\hat y_i)^2$$</div>
+<figure><img src="fig/resid.svg" style="width:54%"><figcaption>Fig. 3.13 · Residuals are the vertical gaps between each point and the fitted line</figcaption></figure>
+<p>Errors are <b>squared</b> so that positive and negative errors do not cancel out, and so that large errors are penalised more heavily.</p>
+
+<h4>1. Sum of Squared Errors (SSE)</h4>
+<div class="formula"><span class="lbl">Also called RSS (Residual Sum of Squares)</span>
+$$SSE=\sum_{i=1}^{n}(y_i-\hat y_i)^2$$</div>
+<ul>
+  <li>Total squared error of the model on the whole dataset; it is the quantity that <b>least-squares regression minimises</b>.</li>
+  <li>Lower is better; SSE = 0 means a perfect fit.</li>
+  <li>It grows with the number of examples, so it cannot compare datasets of different sizes.</li>
+</ul>
+
+<h4>2. Mean Squared Error (MSE)</h4>
+<div class="formula"><span class="lbl">Average squared error per example</span>
+$$MSE=\frac{1}{n}\sum_{i=1}^{n}(y_i-\hat y_i)^2=\frac{SSE}{n}$$</div>
+<ul>
+  <li>Divides by n, so it is <b>independent of dataset size</b> and can compare models across datasets.</li>
+  <li>Always ≥ 0; it is in <b>squared units</b> of the target (e.g. ₹²) and is <b>sensitive to outliers</b>.</li>
+  <li>Differentiable, so it is the standard <b>loss function</b> for training regression models by gradient descent.</li>
+</ul>
+
+<h4>Related Measures</h4>
+<table class="t">
+<tr><th style="width:18%">Measure</th><th style="width:40%">Formula</th><th>Note</th></tr>
+<tr><td>RMSE</td><td>$\sqrt{MSE}$</td><td>Same units as y; easy to interpret</td></tr>
+<tr><td>MAE</td><td>$\frac1n\sum|y_i-\hat y_i|$</td><td>Less sensitive to outliers</td></tr>
+<tr><td>R²</td><td>$1-\dfrac{SSE}{SST},\ \ SST=\sum(y_i-\bar y)^2$</td><td>Fraction of variance explained; 1 = perfect</td></tr>
+</table>
+
+<h4>Numerical</h4>
+<p><b>Given:</b> n = 100 examples; SE₁ = 13.33, SE₂ = 3.33, SE₃ = 4.00 (the remaining errors contribute nothing).</p>
+<ol class="steps">
+  <li><b>SSE:</b> $SSE=SE_1+SE_2+SE_3=13.33+3.33+4.00=20.66$</li>
+  <li><b>MSE:</b> $MSE=\dfrac{SSE}{n}=\dfrac{20.66}{100}=$ <b>0.2066</b></li>
+  <li><b>RMSE (extra):</b> $\sqrt{0.2066}=0.4545$</li>
+</ol>
+<div class="formula"><span class="lbl">Answer</span>
+$$MSE=\frac{13.33+3.33+4.00}{100}=\frac{20.66}{100}=0.2066$$</div>
+<div class="tip">State your reading in one line before calculating: "SSE = sum of the given squared errors; MSE = SSE / n with n = 100." If the examiner instead meant the mean of only the three given values, MSE = 20.66 / 3 = 6.887. Showing the formula MSE = SSE / n clearly earns the method marks either way.</div>
+<div class="concl">SSE is the total of the squared residuals and MSE is their average, MSE = SSE / n. For the given data SSE = 20.66 and MSE = 20.66 / 100 = 0.2066 (RMSE ≈ 0.45).</div>
+</div></div>
+
+<!-- ================= Q15 ================= -->
+<div class="q" data-marks="6" data-asked="Nov-Dec 2025">
+<div class="qt">Explain Bayesian Linear Regression.</div>
+<div class="ans">
+
+<h4>Introduction</h4>
+<div class="def"><b>Bayesian Linear Regression</b> is linear regression in which the <b>weights are treated as random variables with a probability distribution</b> instead of single fixed values. We start with a <b>prior</b> belief about the weights, update it with the observed data using <b>Bayes' theorem</b>, and obtain a <b>posterior distribution</b>. Predictions therefore come with a measure of <b>uncertainty</b>.</div>
+<p>Ordinary least squares (OLS) gives one best line. Bayesian regression gives a <b>distribution over all plausible lines</b>.</p>
+
+<h4>Bayes' Theorem for the Weights</h4>
+<div class="formula">$$\underbrace{p(w\mid X,y)}_{\text{posterior}}=\frac{\overbrace{p(y\mid X,w)}^{\text{likelihood}}\ \ \overbrace{p(w)}^{\text{prior}}}{\underbrace{p(y\mid X)}_{\text{evidence}}}\qquad\Longrightarrow\qquad \text{posterior}\propto\text{likelihood}\times\text{prior}$$</div>
+
+<h4>Components of the Model</h4>
+<table class="t">
+<tr><th style="width:18%">Part</th><th style="width:42%">Usual choice</th><th>Meaning</th></tr>
+<tr><td><b>Model</b></td><td>$y=w^Tx+\varepsilon,\ \ \varepsilon\sim N(0,\sigma^2)$</td><td>Linear relation plus Gaussian noise</td></tr>
+<tr><td><b>Likelihood</b></td><td>$p(y\mid X,w)=N(Xw,\ \sigma^2 I)$</td><td>How well given weights explain the data</td></tr>
+<tr><td><b>Prior</b></td><td>$p(w)=N(0,\ \alpha^{-1}I)$</td><td>Belief before data: weights are small, near 0</td></tr>
+<tr><td><b>Posterior</b></td><td>$p(w\mid X,y)=N(m_N,\ S_N)$</td><td>Updated belief after seeing the data</td></tr>
+</table>
+<div class="formula"><span class="lbl">Posterior (closed form for Gaussian prior and noise)</span>
+$$S_N^{-1}=\alpha I+\frac{1}{\sigma^2}X^TX\qquad m_N=\frac{1}{\sigma^2}\,S_N\,X^Ty$$</div>
+<div class="formula"><span class="lbl">Predictive distribution for a new input x*</span>
+$$p(y_*\mid x_*)=N\big(m_N^Tx_*,\ \ \sigma^2+x_*^TS_Nx_*\big)$$
+<div class="where">The predictive variance has two parts: $\sigma^2$ is noise in the data, and $x_*^TS_Nx_*$ is uncertainty about the weights, which shrinks as more data arrives and grows for inputs far from the training data.</div></div>
+
+<h4>Steps</h4>
+<ol class="steps">
+  <li><b>Choose a prior</b> on the weights, e.g. $N(0,\alpha^{-1}I)$.</li>
+  <li><b>Define the likelihood</b> from the linear model with Gaussian noise.</li>
+  <li><b>Compute the posterior</b> with Bayes' theorem (closed form above, or MCMC / variational inference for other priors).</li>
+  <li><b>Predict</b> using the predictive distribution: report the mean and a credible interval.</li>
+  <li><b>Update sequentially:</b> today's posterior becomes tomorrow's prior when new data arrives.</li>
+</ol>
+
+<h4>Small Worked Example (one weight, no bias)</h4>
+<p>Model $y=wx$; data $x=(1,2)$, $y=(2,3)$; prior $w\sim N(0,1)$ (α = 1); noise variance σ² = 1.</p>
+<ul>
+  <li>$\sum x_i^2=1+4=5$, $\sum x_iy_i=2+6=8$.</li>
+  <li>Posterior precision $=\alpha+\sum x_i^2/\sigma^2=1+5=6$, so posterior variance $=1/6=0.167$.</li>
+  <li>Posterior mean $=\dfrac{8}{6}=$ <b>1.333</b>, compared with the OLS estimate $8/5=1.6$.</li>
+  <li>Prediction at $x_*=3$: mean $=1.333\times3=$ <b>4.0</b>, variance $=1+9/6=2.5$ (standard deviation 1.58).</li>
+</ul>
+<figure><img src="fig/bayes.svg" style="width:58%"><figcaption>Fig. 3.14 · The data sharpens the wide prior into a narrow posterior; its mean is pulled from 1.6 towards the prior mean 0</figcaption></figure>
+<p>The prior <b>shrinks</b> the estimate towards 0. In fact the posterior mean (the MAP estimate) equals <b>Ridge regression</b> with $\lambda=\alpha\sigma^2$, so Bayesian regression explains why L2 regularisation works.</p>
+
+<h4>OLS vs Bayesian Linear Regression</h4>
+<table class="t">
+<tr><th style="width:22%">Basis</th><th style="width:39%">OLS</th><th>Bayesian Linear Regression</th></tr>
+<tr><td>Weights</td><td>Fixed single values</td><td>Probability distribution</td></tr>
+<tr><td>Prior knowledge</td><td>Not used</td><td>Included through the prior</td></tr>
+<tr><td>Output</td><td>Point prediction</td><td>Prediction with uncertainty (credible interval)</td></tr>
+<tr><td>Small data</td><td>Overfits easily</td><td>Prior regularises; works well</td></tr>
+<tr><td>Cost</td><td>Cheap closed form</td><td>More computation (sampling for non-Gaussian priors)</td></tr>
+</table>
+<p><b>Advantages:</b> quantifies uncertainty, works with small datasets, built-in regularisation, allows online updating. <b>Disadvantages:</b> choosing a prior is subjective, and computation is heavier for large or non-Gaussian models. <b>Applications:</b> medical and financial forecasting where confidence matters, A/B testing, Bayesian optimisation and sensor calibration.</p>
+<div class="concl">Bayesian linear regression places a prior on the weights and combines it with the likelihood to get a posterior distribution, so every prediction comes with its uncertainty. With a Gaussian prior its mean estimate equals Ridge regression.</div>
+</div></div>

@@ -1,0 +1,9 @@
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+# generated while building / checking notes
+qa/
+fig/_preview/
+skills/padhai/examples/*/*.pdf
+skills/padhai/examples/*/ML_*.html

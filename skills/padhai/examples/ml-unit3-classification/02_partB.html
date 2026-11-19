@@ -1,0 +1,156 @@
+<div class="part" data-title="Binary Classification and its Evaluation" data-sub="Linear model · Confusion matrix · Accuracy · Precision · Recall · F-measure"></div>
+
+<!-- ================= Q4 ================= -->
+<div class="q" data-marks="6">
+<div class="qt">Explain the linear classification model with an example.</div>
+<div class="ans">
+
+<h4>Definition</h4>
+<div class="def">A <b>linear classification model</b> separates the classes with a <b>straight line</b> (2-D), a <b>plane</b> (3-D) or a <b>hyperplane</b> (n-D). It computes a weighted sum of the input features plus a bias, and the <b>sign</b> of this score decides the class.</div>
+<div class="formula"><span class="lbl">Linear classifier</span>
+$$z = w\cdot x + b = w_1x_1+w_2x_2+\dots+w_nx_n+b \qquad \hat y=\begin{cases}+1 & \text{if } z\ge 0\\ -1 & \text{if } z<0\end{cases}$$
+<div class="where"><b>x</b> = feature vector, <b>w</b> = weight vector (normal to the hyperplane, it sets the orientation), <b>b</b> = bias (shifts the hyperplane away from the origin). The <b>decision boundary</b> is the hyperplane $w\cdot x+b=0$.</div></div>
+
+<h4>Geometric View</h4>
+<ul>
+  <li>Points with $w\cdot x+b\gt 0$ fall on one side of the hyperplane (class +1), points with $w\cdot x+b\lt 0$ on the other side (class −1).</li>
+  <li>The <b>distance</b> of a point from the hyperplane is $\dfrac{|w\cdot x+b|}{\lVert w\rVert}$; a larger distance means a more confident prediction.</li>
+  <li>Data that can be split perfectly by such a hyperplane is called <b>linearly separable</b>.</li>
+</ul>
+<figure><img src="fig/linclf.svg" style="width:58%"><figcaption>Fig. 3.3 · A linear classifier with w = (2, 1), b = −6</figcaption></figure>
+
+<h4>Worked Example</h4>
+<p>Take $w=(2,1)$ and $b=-6$, so the boundary is $2x_1+x_2-6=0$.</p>
+<table class="t num">
+<tr><th>Point x</th><th>z = 2x₁ + x₂ − 6</th><th>Sign</th><th>Predicted class</th><th>Distance |z| / ‖w‖ (‖w‖ = √5)</th></tr>
+<tr><td>(4, 3)</td><td>8 + 3 − 6 = 5</td><td>+</td><td>+1</td><td>5 / 2.236 = 2.236</td></tr>
+<tr><td>(3, 2)</td><td>6 + 2 − 6 = 2</td><td>+</td><td>+1</td><td>2 / 2.236 = 0.894</td></tr>
+<tr><td>(1, 1)</td><td>2 + 1 − 6 = −3</td><td>−</td><td>−1</td><td>3 / 2.236 = 1.342</td></tr>
+</table>
+<p>Point (4, 3) is classified as +1 with the highest confidence because it lies farthest from the boundary.</p>
+
+<h4>How w and b are Learned</h4>
+<table class="t">
+<tr><th style="width:24%">Model</th><th style="width:40%">Rule / loss</th><th>Remark</th></tr>
+<tr><td><b>Perceptron</b></td><td>If a point is misclassified: $w \leftarrow w+\eta\, y_i x_i,\; b\leftarrow b+\eta\, y_i$</td><td>Converges only if data is linearly separable.</td></tr>
+<tr><td><b>Logistic regression</b></td><td>$P(y=1\mid x)=\sigma(w\cdot x+b)=\frac{1}{1+e^{-(w\cdot x+b)}}$; minimise cross-entropy</td><td>Gives probabilities; threshold 0.5 ⇔ z = 0.</td></tr>
+<tr><td><b>Linear SVM</b></td><td>Maximise the margin $2/\lVert w\rVert$ (Q11)</td><td>Picks the boundary with the widest gap.</td></tr>
+</table>
+
+<h4>Advantages and Limitations</h4>
+<ul>
+  <li><b>Advantages:</b> simple, fast to train and predict, works well with many features (text), easy to interpret (weights show feature importance).</li>
+  <li><b>Limitations:</b> cannot separate non-linear data such as XOR or concentric circles; for those we use kernels (Q13) or non-linear models.</li>
+</ul>
+<div class="concl">A linear classifier predicts the class from the sign of $w\cdot x+b$; the hyperplane $w\cdot x+b=0$ is its decision boundary. Perceptron, logistic regression and linear SVM are all linear classifiers that differ only in how they choose w and b.</div>
+</div></div>
+
+<!-- ================= Q5 ================= -->
+<div class="q" data-marks="6" data-asked="Nov-Dec 2023">
+<div class="qt">Explain any 4 evaluation measures of binary classification with example.</div>
+<div class="ans">
+
+<h4>Confusion Matrix: the Base of All Measures</h4>
+<p>A <b>confusion matrix</b> is a table that compares the <b>actual</b> classes with the <b>predicted</b> classes. For a binary problem it is 2 × 2:</p>
+<figure><img src="fig/cm2.svg" style="width:62%"><figcaption>Fig. 3.4 · Binary confusion matrix (rows = actual, columns = predicted)</figcaption></figure>
+<table class="t">
+<tr><th style="width:12%">Term</th><th>Meaning</th></tr>
+<tr><td><b>TP</b></td><td>Actually positive and predicted positive (correct hit).</td></tr>
+<tr><td><b>TN</b></td><td>Actually negative and predicted negative (correct rejection).</td></tr>
+<tr><td><b>FP</b></td><td>Actually negative but predicted positive: a <b>false alarm</b> (Type I error).</td></tr>
+<tr><td><b>FN</b></td><td>Actually positive but predicted negative: a <b>miss</b> (Type II error).</td></tr>
+</table>
+
+<h4>Example Used Below</h4>
+<p>A disease test is run on 100 patients: <b>TP = 40, FN = 10, FP = 5, TN = 45</b> (50 actually diseased, 50 healthy).</p>
+
+<h4>1. Accuracy</h4>
+<div class="formula"><span class="lbl">Fraction of all predictions that are correct</span>
+$$\text{Accuracy}=\frac{TP+TN}{TP+TN+FP+FN}=\frac{40+45}{100}=0.85\;(85\%)$$</div>
+<p>Good when classes are balanced; misleading when they are imbalanced (Q3).</p>
+
+<h4>2. Precision (Positive Predictive Value)</h4>
+<div class="formula"><span class="lbl">Of everything predicted positive, how much is truly positive?</span>
+$$\text{Precision}=\frac{TP}{TP+FP}=\frac{40}{40+5}=0.889$$</div>
+<p>Important when a <b>false positive is costly</b>, e.g. a spam filter must not send a genuine mail to spam.</p>
+
+<h4>3. Recall (Sensitivity, True Positive Rate)</h4>
+<div class="formula"><span class="lbl">Of all actual positives, how many did we catch?</span>
+$$\text{Recall}=\frac{TP}{TP+FN}=\frac{40}{40+10}=0.80$$</div>
+<p>Important when a <b>false negative is costly</b>, e.g. missing a cancer patient.</p>
+
+<h4>4. F1-Score (F-measure)</h4>
+<div class="formula"><span class="lbl">Harmonic mean of precision and recall</span>
+$$F_1=\frac{2\cdot P\cdot R}{P+R}=\frac{2(0.889)(0.80)}{0.889+0.80}=\frac{2TP}{2TP+FP+FN}=\frac{80}{95}=0.842$$</div>
+<p>A single score that is high only when <b>both</b> precision and recall are high. The general form is $F_\beta=\frac{(1+\beta^2)PR}{\beta^2P+R}$; β &gt; 1 weights recall more, β &lt; 1 weights precision more.</p>
+
+<h4>Other Measures (for a fuller answer)</h4>
+<table class="t">
+<tr><th style="width:26%">Measure</th><th style="width:36%">Formula</th><th>Example value</th></tr>
+<tr><td>Specificity (TNR)</td><td>$TN/(TN+FP)$</td><td>45 / 50 = 0.90</td></tr>
+<tr><td>False Positive Rate</td><td>$FP/(FP+TN)$ = 1 − specificity</td><td>5 / 50 = 0.10</td></tr>
+<tr><td>Error rate</td><td>$(FP+FN)/\text{Total}$ = 1 − accuracy</td><td>15 / 100 = 0.15</td></tr>
+<tr><td>ROC-AUC</td><td>Area under TPR vs FPR curve over all thresholds</td><td>1 = perfect, 0.5 = random</td></tr>
+</table>
+<div class="hook"><b>Precision looks at the Predicted column; Recall looks at the Real (actual) row.</b> P-for-Predicted, R-for-Real.</div>
+<div class="concl">All binary measures come from the four cells of the confusion matrix. Accuracy measures overall correctness, precision measures how trustworthy positive predictions are, recall measures how many positives are found, and F1 balances precision and recall.</div>
+</div></div>
+
+<!-- ================= Q6 ================= -->
+<div class="q" data-marks="12" data-asked="Nov-Dec 2024" data-index="Write formulas for accuracy, precision, recall and F1-score; calculate them for the given confusion matrix (Cancer / No Cancer).">
+<div class="qt">Write formulas for accuracy, precision, recall and F1-score. Calculate them for the given confusion matrix of a cancer-detection model.</div>
+<div class="ans">
+
+<h4>Given Confusion Matrix</h4>
+<p>The paper gives a 2 × 2 table with <b>Actual Values</b> (Cancer, No Cancer) across the top and <b>Predicted Values</b> (Cancer, No Cancer) down the side. "Cancer" is the positive class.</p>
+<table class="t num" style="width:72%;margin:0 auto">
+<tr><th rowspan="2" colspan="2"></th><th colspan="2">Actual Values</th><th rowspan="2">Row total</th></tr>
+<tr><th>Cancer</th><th>No Cancer</th></tr>
+<tr><th rowspan="2">Predicted<br>Values</th><th>Cancer</th><td class="hl"><b>45</b> (TP)</td><td>18 (FP)</td><td>63</td></tr>
+<tr><th>No Cancer</th><td>12 (FN)</td><td class="hl"><b>25</b> (TN)</td><td>37</td></tr>
+<tr><th colspan="2">Column total</th><td>57</td><td>43</td><td><b>100</b></td></tr>
+</table>
+
+<h4>Step 1: Identify TP, TN, FP, FN</h4>
+<ul>
+  <li><b>TP = 45:</b> actually cancer, predicted cancer.</li>
+  <li><b>FP = 18:</b> actually no cancer, but predicted cancer (false alarm).</li>
+  <li><b>FN = 12:</b> actually cancer, but predicted no cancer (missed patients).</li>
+  <li><b>TN = 25:</b> actually no cancer, predicted no cancer.</li>
+  <li>Total = 45 + 18 + 12 + 25 = <b>100</b>; actual cancer = TP + FN = 57; predicted cancer = TP + FP = 63.</li>
+</ul>
+
+<h4>Step 2: Formulas and Calculations</h4>
+<div class="formula"><span class="lbl">(i) Accuracy</span>
+$$\text{Accuracy}=\frac{TP+TN}{TP+TN+FP+FN}=\frac{45+25}{100}=\frac{70}{100}=0.70=70\%$$</div>
+<div class="formula"><span class="lbl">(ii) Precision</span>
+$$\text{Precision}=\frac{TP}{TP+FP}=\frac{45}{45+18}=\frac{45}{63}=0.7143=71.43\%$$</div>
+<div class="formula"><span class="lbl">(iii) Recall (Sensitivity)</span>
+$$\text{Recall}=\frac{TP}{TP+FN}=\frac{45}{45+12}=\frac{45}{57}=0.7895=78.95\%$$</div>
+<div class="formula"><span class="lbl">(iv) F1-Score</span>
+$$F_1=\frac{2\times P\times R}{P+R}=\frac{2\times0.7143\times0.7895}{0.7143+0.7895}=\frac{1.1278}{1.5038}=0.75$$
+$$\text{Check: } F_1=\frac{2TP}{2TP+FP+FN}=\frac{90}{90+18+12}=\frac{90}{120}=0.75=75\%$$</div>
+
+<h4>Step 3: Extra Measures (for full marks)</h4>
+<table class="t num">
+<tr><th>Measure</th><th>Formula</th><th>Value</th></tr>
+<tr><td>Specificity</td><td>TN / (TN + FP) = 25 / 43</td><td>0.5814</td></tr>
+<tr><td>False Positive Rate</td><td>FP / (FP + TN) = 18 / 43</td><td>0.4186</td></tr>
+<tr><td>Error rate</td><td>(FP + FN) / Total = 30 / 100</td><td>0.30</td></tr>
+</table>
+
+<h4>Step 4: Result Table</h4>
+<table class="t num">
+<tr><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1-score</th></tr>
+<tr><td><b>0.70</b></td><td><b>0.7143</b></td><td><b>0.7895</b></td><td><b>0.75</b></td></tr>
+</table>
+
+<h4>Interpretation</h4>
+<ul>
+  <li>The model is correct for <b>70%</b> of patients.</li>
+  <li>When it says "cancer", it is right <b>71%</b> of the time; 18 healthy people get a false alarm and would need further tests.</li>
+  <li>It finds <b>79%</b> of real cancer cases, but <b>12 cancer patients are missed</b>. In medical screening a miss (FN) is far more dangerous than a false alarm, so <b>recall</b> is the most important measure here and the model should be tuned (e.g. lower threshold) to raise it.</li>
+</ul>
+<div class="tip"><b>If your paper prints the table the other way round</b> (actual values as rows, predicted as columns), then FN = 18 and FP = 12. Accuracy (0.70) and F1 (0.75) stay the same; only precision and recall swap: Precision = 45/57 = 0.7895, Recall = 45/63 = 0.7143. Always label TP, FP, FN, TN first, then substitute; the examiner checks the identification step.</div>
+<div class="concl">For the given matrix: Accuracy = 70%, Precision = 71.43%, Recall = 78.95%, F1-score = 75%. Because missed cancers are critical, recall should be improved even at some cost in precision.</div>
+</div></div>

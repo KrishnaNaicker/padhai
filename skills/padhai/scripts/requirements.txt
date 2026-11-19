@@ -1,0 +1,7 @@
+beautifulsoup4
+matplotlib
+numpy
+pillow
+# optional
+pypdf
+pymupdf

@@ -1,0 +1,10 @@
+{
+  "name": "padhai",
+  "description": "Padhai (पढ़ाई): exam-ready master-solution notes (PDF) from any university syllabus, with optional previous-year questions.",
+  "version": "1.0.0",
+  "author": { "name": "Krishna Naicker", "url": "https://github.com/KrishnaNaicker" },
+  "homepage": "https://github.com/KrishnaNaicker/padhai",
+  "repository": "https://github.com/KrishnaNaicker/padhai",
+  "license": "MIT",
+  "keywords": ["education", "exam", "notes", "students", "syllabus", "pyq"]
+}

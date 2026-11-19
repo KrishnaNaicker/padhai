@@ -1,0 +1,11 @@
+{
+  "name": "padhai",
+  "owner": { "name": "Krishna Naicker", "url": "https://github.com/KrishnaNaicker" },
+  "plugins": [
+    {
+      "name": "padhai",
+      "source": "./",
+      "description": "Exam-ready master-solution notes (PDF) from any university syllabus, with optional previous-year questions."
+    }
+  ]
+}
