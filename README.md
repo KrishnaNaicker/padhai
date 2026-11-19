@@ -2,6 +2,8 @@
 
 **Give it your syllabus. Get back exam-ready notes.**
 
+[![skills.sh installs](https://skills.sh/b/KrishnaNaicker/padhai)](https://skills.sh/KrishnaNaicker/padhai)
+
 *Padhai* means "studies", the word every Indian student hears every day. Padhai turns your syllabus into the notes you wish you had: complete, exam-ready, and free for every student.
 
 Padhai is an open-source **Agent Skill**. You give an AI agent (Claude Code, Codex, Gemini CLI, Copilot, Cursor and others) your unit's syllabus, plus previous-year questions if you have them. It writes a **master-solution PDF**: every likely exam question with a full answer, written the way a topper writes it in the exam.
