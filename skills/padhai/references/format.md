@@ -125,4 +125,4 @@ $$d=\sqrt{\sum_i (x_i-y_i)^2}$$
 - Write `<table>` without `class="t"`, or end `<h4>`/`<h5>` text with ":".
 - Put a question's marks/date in the question text: they come from the attributes.
 - Number steps or figures in a way that skips or repeats.
-- Remove or edit the free-notes footer, the first-page notice or the PDF tags (see SKILL.md, non-negotiable 6).
+- Edit the free-notes footer, first-page notice or PDF tags: the build adds them as part of the standard output.
